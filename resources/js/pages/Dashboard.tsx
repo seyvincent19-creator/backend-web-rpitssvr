@@ -11,6 +11,7 @@ import {
     Layers,
     PlusCircle,
     TrendingUp,
+    Users,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -34,6 +35,7 @@ interface Stats {
     departments: number;
     thesis: number;
     courses: number;
+    students: number;
 }
 
 interface Props {
@@ -168,6 +170,13 @@ export default function Dashboard({ stats, recentArticles, authUser }: Props) {
                             value={stats.draft}
                             icon={FileText}
                             accent="bg-gray-500"
+                        />
+                        <StatCard
+                            label="Students"
+                            value={stats.students}
+                            icon={Users}
+                            accent="bg-cyan-600"
+                            sub="enrolled"
                         />
                     </div>
                 </div>

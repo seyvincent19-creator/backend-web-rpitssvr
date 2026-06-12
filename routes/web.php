@@ -7,11 +7,13 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EbookController;
 use App\Http\Controllers\ThesisController;
+use App\Http\Controllers\StudentController;
 use App\Models\Article;
 use App\Models\Ebook;
 use App\Models\Department;
 use App\Models\Thesis;
 use App\Models\Course;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 
@@ -46,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'departments' => Department::count(),
                 'thesis'      => Thesis::count(),
                 'courses'     => Course::count(),
+                'students'    => Student::count(),
             ],
             'recentArticles' => $recentArticles,
             'authUser'       => ['name' => Auth::user()->name, 'email' => Auth::user()->email],
@@ -90,6 +93,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::delete('/ebooks/{ebook}', [EbookController::class, 'destroy'])->name('ebooks.destroy');
     // Thesis CRUD
     Route::resource('thesis', ThesisController::class);
+
+    // Students (enrollment) CRUD
+    Route::resource('students', StudentController::class)->except(['create', 'store']);
     // e-publications CRUD
     // (Similar routes for EpublicationsController can be added here)
     Route::resource('epublications', 'App\Http\Controllers\EpublicationsController');

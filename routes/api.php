@@ -99,4 +99,4 @@ Route::get('/departments/{id}', [DepartmentApiController::class, 'show']);
 
 use App\Http\Controllers\Api\StudentApiController;
 
-Route::post('/students', [StudentApiController::class, 'store']);
+Route::apiResource('students', StudentApiController::class);

@@ -1,6 +1,5 @@
 <?php
 
-// app/Models/Student.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,12 +14,17 @@ class Student extends Model
         'first_name_kh',
         'last_name_en',
         'first_name_en',
+        'gender',
+        'dob',
+        'national_id',
         'phone',
         'email',
-        //'department',
+        'province',
+        'address',
+        'guardian_name',
+        'guardian_phone',
         'major',
         'year',
         'photo_path',
     ];
 }
-

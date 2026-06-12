@@ -12,13 +12,14 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { 
-  LayoutGrid, 
-  BookOpen, 
-  PlusCircle, 
-  Building2,   // for Departments
-  GraduationCap, // for Courses
-  Folder        // for Repository
+import {
+  LayoutGrid,
+  BookOpen,
+  PlusCircle,
+  Building2,
+  GraduationCap,
+  Folder,
+  Users,
 } from "lucide-react";
 import AppLogo from './app-logo';
 
@@ -63,11 +64,16 @@ const mainNavItems: NavItem[] = [
   },
   {
     title: 'Thesis',
-    href: '/thesis', // fixed typo
+    href: '/thesis',
     icon: BookOpen,
     children: [
       { title: 'Create Course', href: '/thesis/create', icon: PlusCircle },
     ],
+  },
+  {
+    title: 'Students',
+    href: '/students',
+    icon: Users,
   },
   // E-Publishcations
   // {
