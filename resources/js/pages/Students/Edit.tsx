@@ -16,30 +16,30 @@ interface Student {
     major: string | null; year: string | null;
 }
 
-interface Props { student: Student }
+interface Props { student: Student; [key: string]: unknown }
 
 const MAJORS = [
-    { value: 'computer_science',     label: 'Computer Science / វិទ្យាសាស្រ្តកុំព្យូទ័រ' },
-    { value: 'electrical',           label: 'Electrical / អគ្គិសនី' },
-    { value: 'mechatronics',         label: 'Mechatronics / មេកាត្រូនិក' },
-    { value: 'industrial_mechanics', label: 'Industrial Mechanics / មេកានិកឧស្សាហកម្ម' },
-    { value: 'electronics',          label: 'Electronics / អេឡិចត្រូនិក' },
-    { value: 'automotive',           label: 'Automotive / មេកានិករថយន្ត' },
-    { value: 'civil',                label: 'Civil Engineering / សំណង់ស៊ីវិល' },
-    { value: 'refrigeration',        label: 'Refrigeration / បរិក្ខាត្រជាក់' },
-    { value: 'english',              label: 'English / អក្សរសាស្រ្តអង់គ្លេស' },
-    { value: 'accounting',           label: 'Accounting / គណនេយ្យ' },
-    // Khmer string values stored by old form
-    { value: 'វិទ្យាសាស្រ្តកុំព្យូទ័រ', label: 'Computer Science / វិទ្យាសាស្រ្តកុំព្យូទ័រ' },
-    { value: 'អគ្គិសនី',               label: 'Electrical / អគ្គិសនី' },
-    { value: 'មេកាត្រូនិក',             label: 'Mechatronics / មេកាត្រូនិក' },
-    { value: 'មេកានិកឧស្សាហកម្ម',        label: 'Industrial Mechanics / មេកានិកឧស្សាហកម្ម' },
-    { value: 'អេឡិចត្រូនិក',             label: 'Electronics / អេឡិចត្រូនិក' },
-    { value: 'មេកានិករថយន្ត',            label: 'Automotive / មេកានិករថយន្ត' },
-    { value: 'សំណង់ស៊ីវិល',              label: 'Civil Engineering / សំណង់ស៊ីវិល' },
-    { value: 'ជំនាញបរិក្ខាត្រជាក់',      label: 'Refrigeration / ជំនាញបរិក្ខាត្រជាក់' },
-    { value: 'អក្សរសាស្រ្តអង់គ្លេស',     label: 'English / អក្សរសាស្រ្តអង់គ្លេស' },
-    { value: 'គណនេយ្យ និងហិរញ្ញវត្ថុ',  label: 'Accounting / គណនេយ្យ' },
+    { value: 'computer_science',         label: 'Computer Science / វិទ្យាសាស្រ្តកុំព្យូទ័រ' },
+    { value: 'electrical',               label: 'Electrical / អគ្គិសនី' },
+    { value: 'mechatronics',             label: 'Mechatronics / មេកាត្រូនិក' },
+    { value: 'industrial_mechanics',     label: 'Industrial Mechanics / មេកានិកឧស្សាហកម្ម' },
+    { value: 'electronics',              label: 'Electronics / អេឡិចត្រូនិក' },
+    { value: 'automotive',               label: 'Automotive / មេកានិករថយន្ត' },
+    { value: 'civil',                    label: 'Civil Engineering / សំណង់ស៊ីវិល' },
+    { value: 'refrigeration',            label: 'Refrigeration / បរិក្ខាត្រជាក់' },
+    { value: 'english',                  label: 'English / អក្សរសាស្រ្តអង់គ្លេស' },
+    { value: 'accounting',               label: 'Accounting / គណនេយ្យ' },
+    // legacy Khmer string values stored by old form
+    { value: 'វិទ្យាសាស្រ្តកុំព្យូទ័រ',  label: 'Computer Science / វិទ្យាសាស្រ្តកុំព្យូទ័រ' },
+    { value: 'អគ្គិសនី',                  label: 'Electrical / អគ្គិសនី' },
+    { value: 'មេកាត្រូនិក',               label: 'Mechatronics / មេកាត្រូនិក' },
+    { value: 'មេកានិកឧស្សាហកម្ម',         label: 'Industrial Mechanics / មេកានិកឧស្សាហកម្ម' },
+    { value: 'អេឡិចត្រូនិក',               label: 'Electronics / អេឡិចត្រូនិក' },
+    { value: 'មេកានិករថយន្ត',              label: 'Automotive / មេកានិករថយន្ត' },
+    { value: 'សំណង់ស៊ីវិល',               label: 'Civil Engineering / សំណង់ស៊ីវិល' },
+    { value: 'ជំនាញបរិក្ខាត្រជាក់',        label: 'Refrigeration / ជំនាញបរិក្ខាត្រជាក់' },
+    { value: 'អក្សរសាស្រ្តអង់គ្លេស',       label: 'English / អក្សរសាស្រ្តអង់គ្លេស' },
+    { value: 'គណនេយ្យ និងហិរញ្ញវត្ថុ',    label: 'Accounting / គណនេយ្យ' },
 ];
 
 const PROVINCES = [
@@ -47,7 +47,7 @@ const PROVINCES = [
     'រតនៈគិរី', 'ស្ទឹងត្រែង', 'កំពង់ចាម', 'ត្បូងឃ្មុំ', 'ខេត្តដទៃទៀត',
 ];
 
-// Normalize year: "Year 4" → "4", "4" → "4"
+// "Year 4" → "4",  "4" → "4"
 function normalizeYear(y: string | null): string {
     if (!y) return '';
     return y.replace(/^Year\s*/i, '').trim();
@@ -70,51 +70,34 @@ const inputCls = (err?: string) =>
 
 export default function Edit() {
     const { student } = usePage<Props>().props;
-
-    const [form, setForm] = useState({
-        last_name_kh:   student.last_name_kh   ?? '',
-        first_name_kh:  student.first_name_kh  ?? '',
-        last_name_en:   student.last_name_en   ?? '',
-        first_name_en:  student.first_name_en  ?? '',
-        gender:         student.gender         ?? '',
-        dob:            student.dob            ?? '',
-        national_id:    student.national_id    ?? '',
-        phone:          student.phone          ?? '',
-        email:          student.email          ?? '',
-        province:       student.province       ?? '',
-        address:        student.address        ?? '',
-        guardian_name:  student.guardian_name  ?? '',
-        guardian_phone: student.guardian_phone ?? '',
-        major:          student.major          ?? '',
-        year:           normalizeYear(student.year),
-    });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [processing, setProcessing] = useState(false);
 
-    const set = (field: string, value: string) => {
-        setForm(f => ({ ...f, [field]: value }));
-        setErrors(e => ({ ...e, [field]: '' }));
-    };
-
-    function submit(e: React.FormEvent) {
+    // Use uncontrolled inputs (defaultValue) so Inertia SSR/hydration
+    // differences don't cause empty fields — data comes straight from props.
+    function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        const payload = Object.fromEntries(fd.entries());
         setProcessing(true);
-        router.put(`/students/${student.id}`, form, {
+        router.put(`/students/${student.id}`, payload, {
             onError: (errs) => { setErrors(errs); setProcessing(false); },
             onSuccess: () => setProcessing(false),
         });
     }
 
+    const s = student; // shorthand
+
     return (
         <AppLayout breadcrumbs={[
             { title: 'Students', href: '/students' },
-            { title: `${student.first_name_en ?? ''} ${student.last_name_en ?? ''}`.trim() || `Student #${student.id}`, href: `/students/${student.id}` },
-            { title: 'Edit', href: `/students/${student.id}/edit` },
+            { title: `${s.first_name_en ?? ''} ${s.last_name_en ?? ''}`.trim() || `Student #${s.id}`, href: `/students/${s.id}` },
+            { title: 'Edit', href: `/students/${s.id}/edit` },
         ]}>
-            <Head title={`Edit — ${student.first_name_en ?? ''} ${student.last_name_en ?? ''}`} />
+            <Head title={`Edit — ${s.first_name_en ?? ''} ${s.last_name_en ?? ''}`} />
             <div className="p-4 md:p-6 max-w-3xl">
 
-                <Link href={`/students/${student.id}`}
+                <Link href={`/students/${s.id}`}
                     className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 transition-colors mb-6">
                     <ArrowLeft className="w-4 h-4" /> Back
                 </Link>
@@ -127,25 +110,25 @@ export default function Edit() {
                             <h2 className="text-sm font-bold text-gray-700 mb-4">Personal Information</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Field label="Last Name (Khmer)" error={errors.last_name_kh}>
-                                    <input value={form.last_name_kh} onChange={e => set('last_name_kh', e.target.value)}
+                                    <input name="last_name_kh" defaultValue={s.last_name_kh ?? ''}
                                         className={inputCls(errors.last_name_kh)}
                                         style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                 </Field>
                                 <Field label="First Name (Khmer)" error={errors.first_name_kh}>
-                                    <input value={form.first_name_kh} onChange={e => set('first_name_kh', e.target.value)}
+                                    <input name="first_name_kh" defaultValue={s.first_name_kh ?? ''}
                                         className={inputCls(errors.first_name_kh)}
                                         style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                 </Field>
                                 <Field label="Last Name (Latin)" error={errors.last_name_en}>
-                                    <input value={form.last_name_en} onChange={e => set('last_name_en', e.target.value)}
+                                    <input name="last_name_en" defaultValue={s.last_name_en ?? ''}
                                         className={inputCls(errors.last_name_en)} />
                                 </Field>
                                 <Field label="First Name (Latin)" error={errors.first_name_en}>
-                                    <input value={form.first_name_en} onChange={e => set('first_name_en', e.target.value)}
+                                    <input name="first_name_en" defaultValue={s.first_name_en ?? ''}
                                         className={inputCls(errors.first_name_en)} />
                                 </Field>
                                 <Field label="Gender" error={errors.gender}>
-                                    <select value={form.gender} onChange={e => set('gender', e.target.value)}
+                                    <select name="gender" defaultValue={s.gender ?? ''}
                                         className={inputCls(errors.gender)}>
                                         <option value="">— Select —</option>
                                         <option value="male">Male / បុរស</option>
@@ -153,11 +136,11 @@ export default function Edit() {
                                     </select>
                                 </Field>
                                 <Field label="Date of Birth" error={errors.dob}>
-                                    <input type="date" value={form.dob} onChange={e => set('dob', e.target.value)}
+                                    <input type="date" name="dob" defaultValue={s.dob ?? ''}
                                         className={inputCls(errors.dob)} />
                                 </Field>
                                 <Field label="National ID" error={errors.national_id}>
-                                    <input value={form.national_id} onChange={e => set('national_id', e.target.value)}
+                                    <input name="national_id" defaultValue={s.national_id ?? ''}
                                         className={inputCls(errors.national_id)} />
                                 </Field>
                             </div>
@@ -168,15 +151,15 @@ export default function Edit() {
                             <h2 className="text-sm font-bold text-gray-700 mb-4">Contact Information</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Field label="Phone *" error={errors.phone}>
-                                    <input value={form.phone} onChange={e => set('phone', e.target.value)}
+                                    <input name="phone" defaultValue={s.phone ?? ''}
                                         className={inputCls(errors.phone)} />
                                 </Field>
                                 <Field label="Email" error={errors.email}>
-                                    <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
+                                    <input type="email" name="email" defaultValue={s.email ?? ''}
                                         className={inputCls(errors.email)} />
                                 </Field>
                                 <Field label="Province" error={errors.province}>
-                                    <select value={form.province} onChange={e => set('province', e.target.value)}
+                                    <select name="province" defaultValue={s.province ?? ''}
                                         className={inputCls(errors.province)}
                                         style={{ fontFamily: 'Siemreap, sans-serif' }}>
                                         <option value="">— Select —</option>
@@ -184,7 +167,7 @@ export default function Edit() {
                                     </select>
                                 </Field>
                                 <Field label="Address" error={errors.address}>
-                                    <input value={form.address} onChange={e => set('address', e.target.value)}
+                                    <input name="address" defaultValue={s.address ?? ''}
                                         className={inputCls(errors.address)}
                                         style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                 </Field>
@@ -196,12 +179,12 @@ export default function Edit() {
                             <h2 className="text-sm font-bold text-gray-700 mb-4">Guardian Information</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Field label="Guardian Name" error={errors.guardian_name}>
-                                    <input value={form.guardian_name} onChange={e => set('guardian_name', e.target.value)}
+                                    <input name="guardian_name" defaultValue={s.guardian_name ?? ''}
                                         className={inputCls(errors.guardian_name)}
                                         style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                 </Field>
                                 <Field label="Guardian Phone" error={errors.guardian_phone}>
-                                    <input value={form.guardian_phone} onChange={e => set('guardian_phone', e.target.value)}
+                                    <input name="guardian_phone" defaultValue={s.guardian_phone ?? ''}
                                         className={inputCls(errors.guardian_phone)} />
                                 </Field>
                             </div>
@@ -212,16 +195,15 @@ export default function Edit() {
                             <h2 className="text-sm font-bold text-gray-700 mb-4">Academic Information</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Field label="Major *" error={errors.major}>
-                                    <select value={form.major} onChange={e => set('major', e.target.value)}
+                                    <select name="major" defaultValue={s.major ?? ''}
                                         className={inputCls(errors.major)}>
                                         <option value="">— Select Major —</option>
-                                        {/* Deduplicate by showing only unique values */}
                                         {MAJORS.filter((m, i, arr) => arr.findIndex(x => x.value === m.value) === i)
                                             .map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
                                     </select>
                                 </Field>
                                 <Field label="Year *" error={errors.year}>
-                                    <select value={form.year} onChange={e => set('year', e.target.value)}
+                                    <select name="year" defaultValue={normalizeYear(s.year)}
                                         className={inputCls(errors.year)}>
                                         <option value="">— Select Year —</option>
                                         <option value="1">Year 1</option>
@@ -235,7 +217,7 @@ export default function Edit() {
 
                         {/* Footer */}
                         <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
-                            <Link href={`/students/${student.id}`}
+                            <Link href={`/students/${s.id}`}
                                 className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors">
                                 Cancel
                             </Link>
