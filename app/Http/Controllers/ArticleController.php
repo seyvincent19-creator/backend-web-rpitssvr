@@ -43,7 +43,9 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'content' => 'required|string',
+            'content_en' => 'nullable|string',
             'post_date' => 'required|date',
             'status' => 'required|in:published,draft',
             'user' => 'required|exists:users,id',
@@ -58,7 +60,9 @@ class ArticleController extends Controller
 
         $article = new Article();
         $article->title = $request->title;
+        $article->title_en = $request->title_en;
         $article->content = $request->content;
+        $article->content_en = $request->content_en;
         $article->created_at = $request->post_date; // Use a post_date field on DB for this
         $article->status = $request->status;
         $article->user_id = $request->user;
@@ -86,7 +90,9 @@ public function update(Request $request, Article $article)
     // (Inertia sends null values as empty strings in FormData, which would fail image rule)
     $rules = [
         'title'           => 'required|string|max:255',
+        'title_en'        => 'nullable|string|max:255',
         'content'         => 'required|string',
+        'content_en'      => 'nullable|string',
         'status'          => 'required|in:published,draft',
         'created_at'      => 'required|date',
         'updated_at'      => 'nullable|date',
@@ -110,9 +116,11 @@ public function update(Request $request, Article $article)
 
 
     // Begin update of article fields
-    $article->title   = $validated['title'];
-    $article->content = $validated['content'];
-    $article->status  = $validated['status'];
+    $article->title      = $validated['title'];
+    $article->title_en   = $validated['title_en'] ?? null;
+    $article->content    = $validated['content'];
+    $article->content_en = $validated['content_en'] ?? null;
+    $article->status     = $validated['status'];
     $article->user_id = $validated['user'];
 
     // Set created_at and updated_at (respecting user input)

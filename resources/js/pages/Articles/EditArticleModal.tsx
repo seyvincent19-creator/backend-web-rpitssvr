@@ -14,7 +14,9 @@ interface Image {
 interface Article {
   id: number;
   title: string;
+  title_en?: string;
   content: string;
+  content_en?: string;
   created_at: string;
   updated_at: string;
   status: string;
@@ -40,7 +42,9 @@ export default function EditArticleModal({ show, onClose, article, users }: Prop
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data, setData, errors, setError, clearErrors, reset } = useForm({
     title: article.title || "",
+    title_en: article.title_en || "",
     content: article.content || "",
+    content_en: article.content_en || "",
     created_at: toDatetimeLocal(article.created_at) || new Date().toISOString().slice(0, 16),
     updated_at: toDatetimeLocal(article.updated_at) || new Date().toISOString().slice(0, 16),
     status: article.status || "draft",
@@ -73,7 +77,9 @@ export default function EditArticleModal({ show, onClose, article, users }: Prop
     clearErrors();
     setData({
       title: article.title || "",
+      title_en: article.title_en || "",
       content: article.content || "",
+      content_en: article.content_en || "",
       created_at: toDatetimeLocal(article.created_at) || new Date().toISOString().slice(0, 16),
       updated_at: toDatetimeLocal(article.updated_at) || new Date().toISOString().slice(0, 16),
       status: article.status || "draft",
@@ -157,7 +163,9 @@ export default function EditArticleModal({ show, onClose, article, users }: Prop
     const formData = new FormData();
     formData.append("_method", "PUT");
     formData.append("title", data.title || "");
+    formData.append("title_en", data.title_en || "");
     formData.append("content", data.content || "");
+    formData.append("content_en", data.content_en || "");
     formData.append("status", data.status || "");
     formData.append("created_at", data.created_at || "");
     formData.append("updated_at", data.updated_at || "");
@@ -206,24 +214,48 @@ export default function EditArticleModal({ show, onClose, article, users }: Prop
             {/* Column 1: text fields */}
             <div className="space-y-6">
               <div>
-                <label>Title</label>
+                <label>🇰🇭 Title (ខ្មែរ)</label>
                 <input
                   type="text"
                   value={data.title}
                   onChange={e => setData("title", e.target.value)}
                   className="w-full border rounded p-2"
+                  style={{ fontFamily: 'Siemreap, sans-serif' }}
                 />
                 {errors.title && <p className="text-red-500">{errors.title}</p>}
               </div>
               <div>
-                <label>Content</label>
+                <label>🇬🇧 Title (English)</label>
+                <input
+                  type="text"
+                  value={data.title_en}
+                  onChange={e => setData("title_en", e.target.value)}
+                  className="w-full border rounded p-2"
+                  placeholder="English title (optional)"
+                />
+                {errors.title_en && <p className="text-red-500">{errors.title_en}</p>}
+              </div>
+              <div>
+                <label>🇰🇭 Content (ខ្មែរ)</label>
                 <textarea
                   value={data.content}
                   onChange={e => setData("content", e.target.value)}
                   className="w-full border rounded p-2"
                   rows={6}
+                  style={{ fontFamily: 'Siemreap, sans-serif' }}
                 />
                 {errors.content && <p className="text-red-500">{errors.content}</p>}
+              </div>
+              <div>
+                <label>🇬🇧 Content (English)</label>
+                <textarea
+                  value={data.content_en}
+                  onChange={e => setData("content_en", e.target.value)}
+                  className="w-full border rounded p-2"
+                  rows={6}
+                  placeholder="English content (optional)"
+                />
+                {errors.content_en && <p className="text-red-500">{errors.content_en}</p>}
               </div>
               <div>
                 <label>Created At</label>

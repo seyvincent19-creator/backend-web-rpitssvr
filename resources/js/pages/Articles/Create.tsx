@@ -15,7 +15,9 @@ export default function Create() {
 
     const { data, setData, post, processing, errors } = useForm({
         title: '',
+        title_en: '',
         content: '',
+        content_en: '',
         thumbnail: null as File | null,
         images: [] as File[],
         user: auth.user.id.toString(),
@@ -28,15 +30,7 @@ export default function Create() {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        const fd = new FormData();
-        fd.append('title', data.title);
-        fd.append('content', data.content);
-        fd.append('post_date', data.post_date);
-        fd.append('status', data.status);
-        fd.append('user', data.user);
-        if (data.thumbnail) fd.append('thumbnail', data.thumbnail);
-        data.images.forEach((f, i) => fd.append(`images[${i}]`, f));
-        post('/articles', { data: fd, forceFormData: true });
+        post('/articles', { forceFormData: true });
     }
 
     return (
@@ -53,20 +47,42 @@ export default function Create() {
 
                         {/* Main content */}
                         <div className="lg:col-span-2 space-y-5">
+
+                            {/* Khmer content */}
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-                                <h2 className="text-sm font-semibold text-gray-700">Article Details</h2>
+                                <h2 className="text-sm font-semibold text-gray-700">🇰🇭 Khmer Content</h2>
                                 <div>
-                                    <label className={lbl}>Title <span className="text-red-500">*</span></label>
-                                    <input type="text" placeholder="Enter article title" value={data.title}
-                                        onChange={e => setData('title', e.target.value)} className={inp} />
+                                    <label className={lbl}>Title (ខ្មែរ) <span className="text-red-500">*</span></label>
+                                    <input type="text" placeholder="ចំណងជើងអត្ថបទ" value={data.title}
+                                        onChange={e => setData('title', e.target.value)} className={inp}
+                                        style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                     {errors.title && <p className={err}>{errors.title}</p>}
                                 </div>
                                 <div>
-                                    <label className={lbl}>Content <span className="text-red-500">*</span></label>
-                                    <textarea placeholder="Write article content…" value={data.content}
+                                    <label className={lbl}>Content (ខ្មែរ) <span className="text-red-500">*</span></label>
+                                    <textarea placeholder="សរសេរមាតិកាអត្ថបទ…" value={data.content}
                                         onChange={e => setData('content', e.target.value)}
-                                        rows={8} className={inp + ' resize-none'} />
+                                        rows={8} className={inp + ' resize-none'}
+                                        style={{ fontFamily: 'Siemreap, sans-serif' }} />
                                     {errors.content && <p className={err}>{errors.content}</p>}
+                                </div>
+                            </div>
+
+                            {/* English content */}
+                            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+                                <h2 className="text-sm font-semibold text-gray-700">🇬🇧 English Content <span className="text-gray-400 font-normal">(optional)</span></h2>
+                                <div>
+                                    <label className={lbl}>Title (English)</label>
+                                    <input type="text" placeholder="Enter article title in English" value={data.title_en}
+                                        onChange={e => setData('title_en', e.target.value)} className={inp} />
+                                    {errors.title_en && <p className={err}>{errors.title_en}</p>}
+                                </div>
+                                <div>
+                                    <label className={lbl}>Content (English)</label>
+                                    <textarea placeholder="Write article content in English…" value={data.content_en}
+                                        onChange={e => setData('content_en', e.target.value)}
+                                        rows={8} className={inp + ' resize-none'} />
+                                    {errors.content_en && <p className={err}>{errors.content_en}</p>}
                                 </div>
                             </div>
 
