@@ -100,3 +100,26 @@ Route::get('/departments/{id}', [DepartmentApiController::class, 'show']);
 use App\Http\Controllers\Api\StudentApiController;
 
 Route::apiResource('students', StudentApiController::class);
+
+// Translation proxy — avoids CORS when calling Google Translate from the browser
+Route::post('/translate', function (Request $request) {
+    $text = $request->input('text', '');
+    if (!$text) return response()->json(['result' => '']);
+
+    $response = \Illuminate\Support\Facades\Http::get('https://translate.googleapis.com/translate_a/single', [
+        'client' => 'gtx',
+        'sl'     => 'km',
+        'tl'     => 'en',
+        'dt'     => 't',
+        'q'      => $text,
+    ]);
+
+    if (!$response->successful()) {
+        return response()->json(['error' => 'Translation failed'], 500);
+    }
+
+    $data       = $response->json();
+    $translated = collect($data[0])->map(fn($item) => $item[0])->join('');
+
+    return response()->json(['result' => $translated]);
+});
