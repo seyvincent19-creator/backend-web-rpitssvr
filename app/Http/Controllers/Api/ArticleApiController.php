@@ -10,7 +10,7 @@
     {
         public function index()
         {
-            $articles = Article::with('images', 'user')->where('status','published')->orderBy('created_at', 'desc')->paginate(10);
+            $articles = Article::with('images', 'user')->where('status','published')->orderBy('created_at', 'desc')->paginate(100);
             return response()->json($articles);
         }
 
