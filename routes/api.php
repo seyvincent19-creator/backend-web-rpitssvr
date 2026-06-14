@@ -101,25 +101,58 @@ use App\Http\Controllers\Api\StudentApiController;
 
 Route::apiResource('students', StudentApiController::class);
 
-// Translation proxy — avoids CORS when calling Google Translate from the browser
+// Translation proxy — avoids CORS; chunks long text to stay under Google's ~4000-char limit
 Route::post('/translate', function (Request $request) {
     $text = $request->input('text', '');
     if (!$text) return response()->json(['result' => '']);
 
-    $response = \Illuminate\Support\Facades\Http::get('https://translate.googleapis.com/translate_a/single', [
-        'client' => 'gtx',
-        'sl'     => 'km',
-        'tl'     => 'en',
-        'dt'     => 't',
-        'q'      => $text,
-    ]);
+    // Split into paragraphs, then batch into ≤3500-char chunks
+    $lines   = preg_split('/\r\n|\r|\n/', $text);
+    $chunks  = [];
+    $current = '';
 
-    if (!$response->successful()) {
-        return response()->json(['error' => 'Translation failed'], 500);
+    foreach ($lines as $line) {
+        if (strlen($current) + strlen($line) + 1 > 3500) {
+            if ($current !== '') $chunks[] = $current;
+            // If a single line is itself too long, split by sentence (~。.!?)
+            if (strlen($line) > 3500) {
+                $sentences = preg_split('/(?<=[។.!?])\s+/', $line);
+                $sub = '';
+                foreach ($sentences as $s) {
+                    if (strlen($sub) + strlen($s) + 1 > 3500) {
+                        if ($sub !== '') $chunks[] = $sub;
+                        $sub = $s;
+                    } else {
+                        $sub = $sub === '' ? $s : $sub . ' ' . $s;
+                    }
+                }
+                $current = $sub;
+            } else {
+                $current = $line;
+            }
+        } else {
+            $current = $current === '' ? $line : $current . "\n" . $line;
+        }
+    }
+    if ($current !== '') $chunks[] = $current;
+
+    $translated = [];
+    foreach ($chunks as $chunk) {
+        $response = \Illuminate\Support\Facades\Http::get('https://translate.googleapis.com/translate_a/single', [
+            'client' => 'gtx',
+            'sl'     => 'km',
+            'tl'     => 'en',
+            'dt'     => 't',
+            'q'      => $chunk,
+        ]);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Translation failed on chunk'], 500);
+        }
+
+        $data         = $response->json();
+        $translated[] = collect($data[0])->map(fn($item) => $item[0])->join('');
     }
 
-    $data       = $response->json();
-    $translated = collect($data[0])->map(fn($item) => $item[0])->join('');
-
-    return response()->json(['result' => $translated]);
+    return response()->json(['result' => implode("\n", $translated)]);
 });
