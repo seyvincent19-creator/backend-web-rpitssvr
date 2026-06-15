@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $recentArticles = Article::with('user')
             ->orderBy('created_at', 'desc')
             ->limit(5)
-            ->get(['id', 'title', 'status', 'created_at', 'user_id', 'thumbnail']);
+            ->get(['id', 'title', 'status', 'created_at', 'user_id', 'thumbnail', 'view_count']);
 
         return Inertia::render('Dashboard', [
             'stats' => [
@@ -95,6 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'thesis'      => Thesis::count(),
                 'courses'     => Course::count(),
                 'students'    => Student::count(),
+                'totalViews'  => Article::sum('view_count'),
             ],
             'recentArticles' => $recentArticles,
             'authUser'       => ['name' => Auth::user()->name, 'email' => Auth::user()->email],

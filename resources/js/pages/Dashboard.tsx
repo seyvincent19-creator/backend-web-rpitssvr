@@ -5,6 +5,7 @@ import {
     BookOpen,
     BookText,
     Building2,
+    Eye,
     FileText,
     GraduationCap,
     LayoutDashboard,
@@ -24,6 +25,7 @@ interface Article {
     status: string;
     created_at: string;
     thumbnail?: string;
+    view_count?: number;
     user?: { name: string };
 }
 
@@ -36,6 +38,7 @@ interface Stats {
     thesis: number;
     courses: number;
     students: number;
+    totalViews: number;
 }
 
 interface Props {
@@ -178,6 +181,13 @@ export default function Dashboard({ stats, recentArticles, authUser }: Props) {
                             accent="bg-cyan-600"
                             sub="enrolled"
                         />
+                        <StatCard
+                            label="Total Views"
+                            value={stats.totalViews}
+                            icon={Eye}
+                            accent="bg-pink-500"
+                            sub="all articles"
+                        />
                     </div>
                 </div>
 
@@ -232,6 +242,12 @@ export default function Dashboard({ stats, recentArticles, authUser }: Props) {
                                                 })}
                                             </p>
                                         </div>
+
+                                        {/* View count */}
+                                        <span className="flex-shrink-0 flex items-center gap-1 text-xs text-gray-400">
+                                            <Eye className="w-3.5 h-3.5" />
+                                            {(article.view_count ?? 0).toLocaleString()}
+                                        </span>
 
                                         {/* Status */}
                                         <span className={`flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${
