@@ -55,7 +55,7 @@ Route::get('/og/article/{id}', function ($id) {
     <meta property='og:image:width' content='1200'>
     <meta property='og:image:height' content='630'>
     <meta property='og:url'         content='{$url}'>
-    <meta property='og:site_name'   content='វិទ្យាស្ថានបច្ចេកទេសសស្វាយរៀង'>
+    <meta property='og:site_name'   content='វិទ្យាស្ថានពហុបច្ចេកទេសភូមិភាគតេជោសែនស្វាយរៀង'>
     <meta name='description'        content='{$description}'>
     <script>window.location.replace('{$url}');</script>
 </head>
