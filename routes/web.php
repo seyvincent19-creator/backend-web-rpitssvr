@@ -17,23 +17,31 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 
-// Open Graph share page — Facebook bot reads OG tags here, browsers get redirected to the React frontend
+// Open Graph share page — Facebook bot reads OG tags here, browsers are redirected via JS only
+// NOTE: No <meta http-equiv="refresh"> — Facebook follows that tag and then reads the wrong page
 Route::get('/og/article/{id}', function ($id) {
-    $article = Article::find($id);
+    $article = Article::with('images')->find($id);
 
     $frontendBase = 'https://rpisvr.edu.kh';
     $storageBase  = 'https://phplaravel-1634699-6478817.cloudwaysapps.com/storage/';
 
     if (!$article) {
-        return redirect($frontendBase);
+        return response("<script>window.location.replace('{$frontendBase}');</script>", 302)
+            ->header('Content-Type', 'text/html; charset=utf-8');
     }
 
     $title       = e($article->title);
     $description = e(mb_substr(strip_tags($article->content), 0, 200));
-    $image       = $article->thumbnail
-        ? $storageBase . $article->thumbnail
-        : $frontendBase . '/images/PRIT.png';
     $url         = $frontendBase . '/article/' . $id;
+
+    // Use thumbnail, fall back to first uploaded image, then school logo
+    if ($article->thumbnail) {
+        $image = $storageBase . $article->thumbnail;
+    } elseif ($article->images && $article->images->isNotEmpty()) {
+        $image = $storageBase . $article->images->first()->image_path;
+    } else {
+        $image = $frontendBase . '/images/PRIT.png';
+    }
 
     return response("<!DOCTYPE html>
 <html lang='km'>
@@ -49,10 +57,9 @@ Route::get('/og/article/{id}', function ($id) {
     <meta property='og:url'         content='{$url}'>
     <meta property='og:site_name'   content='វិទ្យាស្ថានបច្ចេកទេសសស្វាយរៀង'>
     <meta name='description'        content='{$description}'>
-    <meta http-equiv='refresh'      content='0;url={$url}'>
     <script>window.location.replace('{$url}');</script>
 </head>
-<body><a href='{$url}'>Click here if not redirected</a></body>
+<body><a href='{$url}'>{$title}</a></body>
 </html>")->header('Content-Type', 'text/html; charset=utf-8');
 })->name('og.article');
 
