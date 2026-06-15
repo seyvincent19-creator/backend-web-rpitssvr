@@ -17,6 +17,45 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 
+// Open Graph share page — Facebook bot reads OG tags here, browsers get redirected to the React frontend
+Route::get('/og/article/{id}', function ($id) {
+    $article = Article::find($id);
+
+    $frontendBase = 'https://rpisvr.edu.kh';
+    $storageBase  = 'https://phplaravel-1634699-6478817.cloudwaysapps.com/storage/';
+
+    if (!$article) {
+        return redirect($frontendBase);
+    }
+
+    $title       = e($article->title);
+    $description = e(mb_substr(strip_tags($article->content), 0, 200));
+    $image       = $article->thumbnail
+        ? $storageBase . $article->thumbnail
+        : $frontendBase . '/images/PRIT.png';
+    $url         = $frontendBase . '/article/' . $id;
+
+    return response("<!DOCTYPE html>
+<html lang='km'>
+<head>
+    <meta charset='utf-8'>
+    <title>{$title}</title>
+    <meta property='og:type'        content='article'>
+    <meta property='og:title'       content='{$title}'>
+    <meta property='og:description' content='{$description}'>
+    <meta property='og:image'       content='{$image}'>
+    <meta property='og:image:width' content='1200'>
+    <meta property='og:image:height' content='630'>
+    <meta property='og:url'         content='{$url}'>
+    <meta property='og:site_name'   content='វិទ្យាស្ថានបច្ចេកទេសសស្វាយរៀង'>
+    <meta name='description'        content='{$description}'>
+    <meta http-equiv='refresh'      content='0;url={$url}'>
+    <script>window.location.replace('{$url}');</script>
+</head>
+<body><a href='{$url}'>Click here if not redirected</a></body>
+</html>")->header('Content-Type', 'text/html; charset=utf-8');
+})->name('og.article');
+
 // Homepage (Inertia view)
 Route::get('/', function () {
     return Inertia::render('Welcome');
