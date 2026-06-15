@@ -46,6 +46,7 @@
         public function show($id)
         {
             $article = Article::with('images', 'user')->findOrFail($id);
+            $article->increment('view_count');
             return response()->json($article);
         }
 
