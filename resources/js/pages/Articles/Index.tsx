@@ -8,6 +8,7 @@ interface User { id: number; name: string }
 interface Article {
     id: number; title: string; content: string; thumbnail?: string;
     post_date: string; status: string; user_id: number; user?: User; created_at: string;
+    view_count?: number;
 }
 interface LinkItem { url: string | null; label: string; active: boolean }
 interface Props {
@@ -75,6 +76,7 @@ export default function Index() {
                                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 hidden md:table-cell">Author</th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 hidden sm:table-cell">Status</th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Date</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 hidden lg:table-cell">Views</th>
                                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
                             </tr>
                         </thead>
@@ -122,6 +124,12 @@ export default function Index() {
                                     </td>
                                     <td className="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell whitespace-nowrap">
                                         {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </td>
+                                    <td className="px-4 py-3 hidden lg:table-cell">
+                                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                                            <Eye className="w-3.5 h-3.5" />
+                                            {(article.view_count ?? 0).toLocaleString()}
+                                        </span>
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="flex items-center justify-end gap-1">
