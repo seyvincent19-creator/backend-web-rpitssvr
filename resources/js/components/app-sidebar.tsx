@@ -20,6 +20,10 @@ import {
   GraduationCap,
   Folder,
   Users,
+  Headphones,
+  Newspaper,
+  Video,
+  FileText,
 } from "lucide-react";
 import AppLogo from './app-logo';
 
@@ -75,33 +79,38 @@ const mainNavItems: NavItem[] = [
     href: '/students',
     icon: Users,
   },
-  // E-Publishcations
-  // {
-  //   title: 'E-Publications',
-  //   href: '/e-publications', // fixed typo
-  //   icon: BookOpen,
-  //   children: [
-  //     { title: 'Create E-Publication', href: '/e-publications/create', icon: PlusCircle },
-  //   ],
-  // },
-  // // Journals
-  // {
-  //   title: 'Journals',
-  //   href: '/journals', // fixed typo
-  //   icon: BookOpen,
-  //   children: [
-  //     { title: 'Create Journal', href: '/journals/create', icon: PlusCircle },
-  //   ],
-  // },
-  // Videos
-  // {
-  //   title: 'Videos',
-  //   href: '/videos', // fixed typo
-  //   icon: BookOpen,
-  //   children: [
-  //     { title: 'Create Video', href: '/videos/create', icon: PlusCircle },
-  //   ],
-  // },
+  {
+    title: 'E-Publications',
+    href: '/e-publications',
+    icon: FileText,
+    children: [
+      { title: 'Create E-Publication', href: '/e-publications/create', icon: PlusCircle },
+    ],
+  },
+  {
+    title: 'Journals',
+    href: '/journals',
+    icon: Newspaper,
+    children: [
+      { title: 'Create Journal', href: '/journals/create', icon: PlusCircle },
+    ],
+  },
+  {
+    title: 'Videos',
+    href: '/videos',
+    icon: Video,
+    children: [
+      { title: 'Create Video', href: '/videos/create', icon: PlusCircle },
+    ],
+  },
+  {
+    title: 'Audios',
+    href: '/audios',
+    icon: Headphones,
+    children: [
+      { title: 'Create Audio', href: '/audios/create', icon: PlusCircle },
+    ],
+  },
 ];
 
 // ✅ Footer navigation items (bottom section)

@@ -8,12 +8,20 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EbookController;
 use App\Http\Controllers\ThesisController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AudioController;
+use App\Http\Controllers\JournalController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\EpublicationsController;
 use App\Models\Article;
 use App\Models\Ebook;
 use App\Models\Department;
 use App\Models\Thesis;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Audio;
+use App\Models\Journal;
+use App\Models\Video;
+use App\Models\EPublication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 
@@ -95,6 +103,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'thesis'      => Thesis::count(),
                 'courses'     => Course::count(),
                 'students'    => Student::count(),
+                'audios'      => Audio::count(),
+                'journals'    => Journal::count(),
+                'videos'      => Video::count(),
+                'epublications' => EPublication::count(),
                 'totalViews'  => Article::sum('view_count'),
             ],
             'recentArticles' => $recentArticles,
@@ -143,9 +155,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Students (enrollment) CRUD
     Route::resource('students', StudentController::class)->except(['create', 'store']);
-    // e-publications CRUD
-    // (Similar routes for EpublicationsController can be added here)
-    Route::resource('epublications', 'App\Http\Controllers\EpublicationsController');
+
+    // Audios CRUD
+    Route::resource('audios', AudioController::class);
+
+    // Journals CRUD
+    Route::resource('journals', JournalController::class);
+
+    // Videos CRUD
+    Route::resource('videos', VideoController::class);
+
+    // E-Publications CRUD
+    Route::resource('e-publications', EpublicationsController::class)->parameters([
+        'e-publications' => 'epublication',
+    ])->names('epublications');
 });
 
 require __DIR__.'/settings.php';

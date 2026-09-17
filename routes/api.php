@@ -8,6 +8,10 @@ use App\Models\User;
 use App\Http\Controllers\Api\ArticleApiController;
 use App\Http\Controllers\Api\EbookApiController;
 use App\Http\Controllers\Api\ThesisApiController;
+use App\Http\Controllers\Api\AudioApiController;
+use App\Http\Controllers\Api\JournalApiController;
+use App\Http\Controllers\Api\VideoApiController;
+use App\Http\Controllers\Api\EPublicationApiController;
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::get('/articles', [ArticleApiController::class, 'index']);
 //     // Add other article routes here if needed
@@ -30,10 +34,17 @@ Route::apiResource('thesis', ThesisApiController::class)->names([
     'index' => 'api.thesis.index',
     'store' => 'api.thesis.store',
     'update' => 'api.thesis.update',
-    'show' => 'api.thesis.show',    
+    'show' => 'api.thesis.show',
     'destroy' => 'api.thesis.destroy',
-    
-    // ... other methods        
+
+    // ... other methods
+]);
+
+Route::apiResource('audios', AudioApiController::class);
+Route::apiResource('journals', JournalApiController::class);
+Route::apiResource('videos', VideoApiController::class);
+Route::apiResource('e-publications', EPublicationApiController::class)->parameters([
+    'e-publications' => 'id',
 ]);
 
 // Public route: anyone can get articles without token

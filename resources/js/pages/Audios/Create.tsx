@@ -8,22 +8,29 @@ const inp = "w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm outlin
 const lbl = "block text-sm font-medium text-gray-700 mb-1.5";
 const err = "mt-1.5 text-xs text-red-500";
 
-type EPublicationForm = {
+const CATEGORIES = [
+    'វិទ្យាសាស្រ្តកុំព្យូទ័រ','អគ្គិសនី','មេកាត្រូនិក','មេកានិកឧស្សាហកម្ម',
+    'អេឡិចត្រូនិក','មេកានិករថយន្ត','សំណង់ស៊ីវិល','ជំនាញបរិក្ខាត្រជាក់',
+    'អក្សរសាស្រ្តអង់គ្លេស','គណនេយ្យ និងហិរញ្ញវត្ថុ',
+];
+
+type AudioForm = {
     title: string; author: string; year: number | string; publisher: string;
-    language: string; pages: number | string; location: string; url: string; image: File | null;
+    type: string; category: string; language: string; location: string;
+    duration: string; url: string; image: File | null;
 };
 
 export default function Create() {
     const fileRef = useRef<HTMLInputElement>(null);
     const currentYear = useMemo(() => new Date().getFullYear(), []);
-    const { data, setData, post, processing, errors, reset } = useForm<EPublicationForm>({
+    const { data, setData, post, processing, errors, reset } = useForm<AudioForm>({
         title: '', author: '', year: currentYear, publisher: '',
-        language: '', pages: '', location: '', url: '', image: null,
+        type: '', category: '', language: '', location: '', duration: '', url: '', image: null,
     });
 
-    const handle = (field: keyof EPublicationForm) => (e: ChangeEvent<HTMLInputElement>) => {
+    const handle = (field: keyof AudioForm) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const v = e.target.value;
-        if (field === 'year' || field === 'pages') setData(field, v === '' ? '' : Number(v));
+        if (field === 'year') setData(field, v === '' ? '' : Number(v));
         else setData(field, v);
     };
 
@@ -32,24 +39,25 @@ export default function Create() {
         const fd = new FormData();
         fd.append('title', data.title); fd.append('author', data.author);
         fd.append('year', String(data.year)); fd.append('publisher', data.publisher);
-        fd.append('language', data.language); fd.append('pages', String(data.pages));
-        fd.append('location', data.location); fd.append('url', data.url);
+        fd.append('type', data.type); fd.append('category', data.category);
+        fd.append('language', data.language); fd.append('location', data.location);
+        fd.append('duration', data.duration); fd.append('url', data.url);
         if (data.image) fd.append('image', data.image);
-        post('/e-publications', {
+        post('/audios', {
             data: fd, forceFormData: true,
-            onSuccess: () => { toast.success('E-Publication saved!'); reset(); },
-            onError: () => toast.error('Failed to save e-publication.'),
+            onSuccess: () => { toast.success('Audio saved!'); reset(); },
+            onError: () => toast.error('Failed to save audio.'),
         });
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'E-Publications', href: '/e-publications' }, { title: 'Create', href: '#' }]}>
-            <Head title="Create E-Publication" />
+        <AppLayout breadcrumbs={[{ title: 'Audios', href: '/audios' }, { title: 'Create', href: '#' }]}>
+            <Head title="Create Audio" />
             <Toaster position="top-right" />
             <div className="p-4 md:p-6 max-w-5xl mx-auto">
                 <div className="mb-6">
-                    <h1 className="text-xl font-bold text-gray-900">New E-Publication</h1>
-                    <p className="text-sm text-gray-500 mt-0.5">Add a new e-publication to the library</p>
+                    <h1 className="text-xl font-bold text-gray-900">New Audio</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">Add a new audio recording to the library</p>
                 </div>
 
                 <form onSubmit={submit}>
@@ -57,16 +65,16 @@ export default function Create() {
 
                         <div className="lg:col-span-2 space-y-5">
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-                                <h2 className="text-sm font-semibold text-gray-700">Publication Information</h2>
+                                <h2 className="text-sm font-semibold text-gray-700">Audio Information</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="sm:col-span-2">
+                                    <div>
                                         <label className={lbl}>Title <span className="text-red-500">*</span></label>
-                                        <input type="text" placeholder="Publication title" value={data.title} onChange={handle('title')} className={inp} />
+                                        <input type="text" placeholder="Audio title" value={data.title} onChange={handle('title')} className={inp} />
                                         {errors.title && <p className={err}>{errors.title}</p>}
                                     </div>
                                     <div>
                                         <label className={lbl}>Author <span className="text-red-500">*</span></label>
-                                        <input type="text" placeholder="Author name" value={data.author} onChange={handle('author')} className={inp} />
+                                        <input type="text" placeholder="Author / speaker name" value={data.author} onChange={handle('author')} className={inp} />
                                         {errors.author && <p className={err}>{errors.author}</p>}
                                     </div>
                                     <div>
@@ -80,22 +88,35 @@ export default function Create() {
                                         {errors.year && <p className={err}>{errors.year}</p>}
                                     </div>
                                     <div>
+                                        <label className={lbl}>Type</label>
+                                        <input type="text" placeholder="e.g. Lecture, Podcast" value={data.type} onChange={handle('type')} className={inp} />
+                                        {errors.type && <p className={err}>{errors.type}</p>}
+                                    </div>
+                                    <div>
+                                        <label className={lbl}>Category</label>
+                                        <select value={data.category} onChange={handle('category')} className={inp}>
+                                            <option value="">Select category…</option>
+                                            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                        </select>
+                                        {errors.category && <p className={err}>{errors.category}</p>}
+                                    </div>
+                                    <div>
                                         <label className={lbl}>Language</label>
                                         <input type="text" placeholder="e.g. Khmer, English" value={data.language} onChange={handle('language')} className={inp} />
                                         {errors.language && <p className={err}>{errors.language}</p>}
                                     </div>
                                     <div>
-                                        <label className={lbl}>Pages</label>
-                                        <input type="number" placeholder="Number of pages" value={data.pages} onChange={handle('pages')} min={1} className={inp} />
-                                        {errors.pages && <p className={err}>{errors.pages}</p>}
-                                    </div>
-                                    <div>
                                         <label className={lbl}>Location</label>
-                                        <input type="text" placeholder="Publication location" value={data.location} onChange={handle('location')} className={inp} />
+                                        <input type="text" placeholder="Recording location" value={data.location} onChange={handle('location')} className={inp} />
                                         {errors.location && <p className={err}>{errors.location}</p>}
                                     </div>
                                     <div>
-                                        <label className={lbl}>Download URL</label>
+                                        <label className={lbl}>Duration</label>
+                                        <input type="text" placeholder="e.g. 45:30" value={data.duration} onChange={handle('duration')} className={inp} />
+                                        {errors.duration && <p className={err}>{errors.duration}</p>}
+                                    </div>
+                                    <div>
+                                        <label className={lbl}>Audio URL</label>
                                         <input type="url" placeholder="https://…" value={data.url} onChange={handle('url')} className={inp} />
                                         {errors.url && <p className={err}>{errors.url}</p>}
                                     </div>
@@ -125,7 +146,7 @@ export default function Create() {
 
                             <button type="submit" disabled={processing}
                                 className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
-                                {processing ? <><LoaderCircle className="w-4 h-4 animate-spin" /> Saving…</> : 'Save E-Publication'}
+                                {processing ? <><LoaderCircle className="w-4 h-4 animate-spin" /> Saving…</> : 'Save Audio'}
                             </button>
                         </div>
                     </div>
